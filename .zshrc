@@ -25,8 +25,6 @@ bindkey '^R' zaw-history
 bindkey "^A" beginning-of-line
 bindkey "^E" end-of-line
 
-source /usr/local/etc/profile.d/autojump.sh
-
 alias ls='exa'
 alias ofzf='open "$(fzf)"'
 
