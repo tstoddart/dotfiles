@@ -17,6 +17,7 @@ fi
 
 # General environment & paths
 export PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:${PATH}"
+fpath=(${HOME}/.zfunc $fpath)
 export EDITOR="nvim"
 alias vim='nvim'
 alias ls='eza'

@@ -1,0 +1,164 @@
+#compdef gloomberb
+
+_gloomberb() {
+    local -a commands
+    commands=(
+        'help:Show every command, or help for one'
+        'launch-ui:Open the terminal UI'
+        'search:Search tickers and company names'
+        'ticker:Show the full research report for one symbol'
+        'quote:Show the latest price for one or more symbols'
+        'compare:Compare quotes for several symbols side by side'
+        'history:Fetch open, high, low, close, and volume over a range'
+        'options:Fetch an options chain'
+        'provider-search:Search instruments at connected data providers'
+        'financials:Fetch annual revenue, profit, and EPS'
+        'fundamentals:Fetch fundamentals and company profile'
+        'valuation:Fetch market cap, enterprise value, and valuation multiples'
+        'earnings:Show upcoming and recent earnings dates'
+        'events:Fetch dividends, splits, and earnings events'
+        'analyst:Fetch analyst rating changes and price targets'
+        'holders:Fetch institutional, fund, and insider holders'
+        'insider:Fetch insider holders'
+        '13f:Fetch institutional and fund holders'
+        'filings:Fetch recent SEC filings'
+        'news:Fetch market headlines or news for one symbol'
+        'fx:Convert a currency into your base currency'
+        'movers:Show gainers, losers, most active, or trending stocks'
+        'indices:Show the major US stock indices'
+        'sectors:Show the SPDR sector ETFs'
+        'econ:List upcoming economic calendar events'
+        'fred:Fetch a FRED economic series'
+        'yield-curve:Show the latest Treasury yields'
+        'correlation:Correlate two symbols daily returns'
+        'portfolio:Show holdings and P&L, and manage manual portfolios'
+        'watchlist:Show watchlist quotes, and add or remove symbols'
+        'broker:List connected broker accounts'
+        'ibkr:List Interactive Brokers profiles'
+        'rss:Read any RSS or Atom feed as headlines'
+        'plugins:List plugins installed from GitHub'
+        'install:Install a plugin from GitHub'
+        'update:Update installed plugins'
+        'remove:Remove an installed plugin'
+        'plugin:Inspect, toggle, or link any plugin'
+        'api:List, inspect, or call plugin capabilities'
+        'remote:Drive running gloomberb app through remote API'
+        'doctor:Check config, cache, plugins, and capabilities'
+        'config:Show or change settings and keybindings'
+        'cache:Show cache size or clear it'
+        'provider:List data sources and operations'
+        'layout:List saved layouts'
+        'pane:List panes and templates'
+        'notes:Read, write, or export ticker notes'
+        'alerts:List, add, and remove price alerts'
+        'debug:Show, export, or clear debug log'
+        'changelog:Print changelog'
+        'command:List every command'
+        'coverage:Show pane and capability coverage'
+        'version:Print version, runtime, and data folder'
+    )
+
+    local -a global_opts
+    global_opts=(
+        '--json[Print machine-readable JSON output]'
+        '--csv[Print CSV output]'
+        '--ndjson[Print NDJSON output]'
+        '--limit[Show at most n rows]:limit:_numbers'
+        '--refresh[Fetch fresh data instead of cache]'
+        '--dry-run[Preview changes without saving]'
+        '(-q --quiet)'{-q,--quiet}'[Suppress text output]'
+        '--color[Force colors]'
+        '--no-color[Disable colors]'
+    )
+
+    _arguments -C \
+        $global_opts \
+        '1: :->command' \
+        '*: :->args'
+
+    case $state in
+        command)
+            _describe -t commands 'gloomberb command' commands
+            ;;
+        args)
+            case $words[2] in
+                portfolio)
+                    local -a portfolio_subcmds
+                    portfolio_subcmds=(
+                        'show:Show holdings and P&L'
+                        'list:List all portfolios'
+                        'create:Create a new manual portfolio'
+                        'delete:Delete a portfolio'
+                        'add:Add a symbol to a portfolio'
+                        'remove:Remove a symbol from a portfolio'
+                        'position:Set shares and average cost'
+                    )
+                    if (( CURRENT == 3 )); then
+                        _describe -t portfolio_subcmds 'portfolio action' portfolio_subcmds
+                    elif (( CURRENT == 4 )); then
+                        if [[ "$words[3]" == "position" ]]; then
+                            _values 'position action' 'set[Set position shares and cost]'
+                        elif [[ "$words[3]" =~ ^(show|delete|add|remove)$ ]]; then
+                            local -a ports
+                            ports=(${(f)"$(jq -r '.portfolios[].name' ~/.gloomberb/config.json 2>/dev/null)"})
+                            _describe -t ports 'portfolio' ports
+                        fi
+                    elif (( CURRENT == 5 && "$words[3]" == "position" && "$words[4]" == "set" )); then
+                        local -a ports
+                        ports=(${(f)"$(jq -r '.portfolios[].name' ~/.gloomberb/config.json 2>/dev/null)"})
+                        _describe -t ports 'portfolio' ports
+                    fi
+                    ;;
+                watchlist)
+                    local -a watchlist_subcmds
+                    watchlist_subcmds=(
+                        'show:Show watchlist quotes'
+                        'list:List all watchlists'
+                        'add:Add symbol to watchlist'
+                        'remove:Remove symbol from watchlist'
+                    )
+                    if (( CURRENT == 3 )); then
+                        _describe -t watchlist_subcmds 'watchlist action' watchlist_subcmds
+                    elif (( CURRENT == 4 )) && [[ "$words[3]" =~ ^(show|add|remove)$ ]]; then
+                        local -a wlists
+                        wlists=(${(f)"$(jq -r '.watchlists[].name' ~/.gloomberb/config.json 2>/dev/null)"})
+                        _describe -t wlists 'watchlist' wlists
+                    fi
+                    ;;
+                config)
+                    local -a config_subcmds
+                    config_subcmds=(
+                        'list:List all configuration settings'
+                        'get:Get a configuration setting'
+                        'set:Set a configuration setting'
+                    )
+                    local -a config_keys
+                    config_keys=(
+                        'baseCurrency:Global currency for portfolio P&L and valuations'
+                        'refreshIntervalMinutes:Cache refresh interval in minutes'
+                        'theme:UI color theme'
+                        'valueFlashingEnabled:Enable price flash animations in TUI'
+                    )
+                    if (( CURRENT == 3 )); then
+                        _describe -t config_subcmds 'config action' config_subcmds
+                    elif (( CURRENT == 4 )) && [[ "$words[3]" =~ ^(get|set)$ ]]; then
+                        _describe -t config_keys 'config key' config_keys
+                    elif (( CURRENT == 5 )) && [[ "$words[3]" == "set" && "$words[4]" == "baseCurrency" ]]; then
+                        local -a currencies
+                        currencies=('GBP:British Pound' 'USD:US Dollar' 'EUR:Euro' 'CHF:Swiss Franc' 'JPY:Japanese Yen' 'CAD:Canadian Dollar' 'AUD:Australian Dollar')
+                        _describe -t currencies 'currency' currencies
+                    fi
+                    ;;
+                fx)
+                    if (( CURRENT == 3 )); then
+                        local -a currencies
+                        currencies=('GBP:British Pound' 'USD:US Dollar' 'EUR:Euro' 'CHF:Swiss Franc' 'JPY:Japanese Yen' 'CAD:Canadian Dollar' 'AUD:Australian Dollar')
+                        _describe -t currencies 'currency' currencies
+                    fi
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+_gloomberb "$@"
