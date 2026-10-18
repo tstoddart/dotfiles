@@ -48,11 +48,13 @@ zmodule completion
 # Interactive fuzzy tab completion with rich Nerd Font previews
 zmodule Aloxaf/fzf-tab
 
-# Fish-like syntax highlighting for Zsh, must be sourced after completion.
-zmodule zsh-users/zsh-syntax-highlighting
 # Fish-like history search for Zsh, must be sourced after
 # zsh-users/zsh-syntax-highlighting.
 zmodule zsh-users/zsh-history-substring-search
 # Fish-like autosuggestions for Zsh. Add the following to your ~/.zshrc to boost
 # performance: ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 zmodule zsh-users/zsh-autosuggestions
+
+zmodule ajeetdsouza/zoxide
+zmodule zdharma-continuum/fast-syntax-highlighting
+zmodule jeffreytse/zsh-vi-mode
