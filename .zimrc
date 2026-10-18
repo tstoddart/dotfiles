@@ -45,6 +45,10 @@ zmodule completion
 # Modules that must be initialized last
 #
 
+# Modern interactive completion UI. Must be sourced after completion and before
+# syntax highlighting/history widgets.
+zmodule marlonrichert/zsh-autocomplete --fpath Completions
+
 # Fish-like syntax highlighting for Zsh, must be sourced after completion.
 zmodule zsh-users/zsh-syntax-highlighting
 # Fish-like history search for Zsh, must be sourced after
@@ -53,5 +57,3 @@ zmodule zsh-users/zsh-history-substring-search
 # Fish-like autosuggestions for Zsh. Add the following to your ~/.zshrc to boost
 # performance: ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 zmodule zsh-users/zsh-autosuggestions
-
-zmodule Aloxaf/fzf-tab
