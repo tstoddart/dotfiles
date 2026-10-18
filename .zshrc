@@ -109,7 +109,10 @@ zstyle ':completion:*' menu no
 # fzf-tab navigation & settings
 zstyle ':fzf-tab:*' fzf-command fzf
 zstyle ':fzf-tab:*' switch-group ',' '.'
-zstyle ':fzf-tab:complete:(cd|zd):*' prefix ' '
+zstyle ':fzf-tab:*' prefix ''
+
+# Load custom icon-aware complist generator (from ~/.zfunc)
+autoload -Uz +X -- -ftb-generate-complist 2>/dev/null
 
 # Directory completion preview with eza and Nerd Font icons
 zstyle ':fzf-tab:complete:(cd|zd):*' fzf-preview 'eza -1 --color=always --icons=always --group-directories-first $realpath'
