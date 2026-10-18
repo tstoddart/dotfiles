@@ -96,13 +96,20 @@ zmodload zsh/complist
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
+# Category glyphs for fzf-tab group headers
+zstyle ':completion:*:*:*:*:directories' descriptions ' %d'
+zstyle ':completion:*:*:*:*:files'       descriptions '󰈔 %d'
+zstyle ':completion:*:*:*:*:commands'    descriptions '󰞷 %d'
+zstyle ':completion:*:*:*:*:options'     descriptions '󰘳 %d'
+zstyle ':completion:*:*:(git|g):*'       descriptions '󰊢 %d'
+
 # Disable default completion menu to let fzf-tab take over
 zstyle ':completion:*' menu no
 
 # fzf-tab navigation & settings
 zstyle ':fzf-tab:*' fzf-command fzf
 zstyle ':fzf-tab:*' switch-group ',' '.'
-zstyle ':fzf-tab:*' prefix ''
+zstyle ':fzf-tab:complete:(cd|zd):*' prefix ' '
 
 # Directory completion preview with eza and Nerd Font icons
 zstyle ':fzf-tab:complete:(cd|zd):*' fzf-preview 'eza -1 --color=always --icons=always --group-directories-first $realpath'
