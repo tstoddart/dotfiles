@@ -156,6 +156,9 @@ alias agy-pull='rsync -avz --exclude=".migrated" homelab:~/.gemini/config/ ~/.ge
 # Dotfiles management (bare git repository with home worktree)
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
+# zoxide shell integratoin
+eval "$(zoxide init zsh)"
+
 # ------------------------------------------------------------------------------
 # Machine-Local Overrides & Secrets (untracked by git)
 # ------------------------------------------------------------------------------
