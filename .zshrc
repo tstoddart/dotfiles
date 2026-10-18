@@ -20,7 +20,7 @@ export PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:${PATH}"
 fpath=(${HOME}/.zfunc $fpath)
 export EDITOR="nvim"
 alias vim='nvim'
-alias ls='eza'
+
 
 [[ "$TERM" = "xterm-kitty" ]] && alias ssh="kitty +kitten ssh"
 
@@ -121,6 +121,16 @@ unset key
 # ------------------------------------------------------------------------------
 # Tool Integrations & Aliases
 # ------------------------------------------------------------------------------
+
+# Eza aliases with Nerd Font icons (overriding Zim utility module defaults)
+if (( $+commands[eza] )); then
+  alias ls='eza --icons=auto --group-directories-first'
+  alias ll='eza -lh --icons=auto --group-directories-first'
+  alias la='eza -a --icons=auto --group-directories-first'
+  alias lsa='ls -a'
+  alias lt='eza --tree --level=2 --long --icons=auto --git'
+  alias lta='lt -a'
+fi
 
 autoload -Uz zcalc
 
