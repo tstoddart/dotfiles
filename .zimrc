@@ -45,9 +45,8 @@ zmodule completion
 # Modules that must be initialized last
 #
 
-# Modern interactive completion UI. Must be sourced after completion and before
-# syntax highlighting/history widgets.
-zmodule marlonrichert/zsh-autocomplete --fpath Completions
+# Interactive fuzzy tab completion with rich Nerd Font previews
+zmodule Aloxaf/fzf-tab
 
 # Fish-like syntax highlighting for Zsh, must be sourced after completion.
 zmodule zsh-users/zsh-syntax-highlighting

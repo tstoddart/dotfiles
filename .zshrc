@@ -91,19 +91,24 @@ fi
 # Initialize modules
 source ${ZIM_HOME}/init.zsh
 
-# Completion module preferences that need to win after Zim initializes.
+# Completion module preferences and fzf-tab styling
 zmodload zsh/complist
-zstyle ':completion:*' menu select
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-# zsh-autocomplete tuning.
-zstyle ':autocomplete:*' min-input 1
-zstyle ':autocomplete:*' delay 0.05
-zstyle ':autocomplete:*' list-lines 16
+# Disable default completion menu to let fzf-tab take over
+zstyle ':completion:*' menu no
 
-# Use zsh's built-in menu-select widget for Tab cycling/selection.
-bindkey '^I' menu-select
+# fzf-tab navigation & settings
+zstyle ':fzf-tab:*' fzf-command fzf
+zstyle ':fzf-tab:*' switch-group ',' '.'
+zstyle ':fzf-tab:*' prefix ''
+
+# Directory completion preview with eza and Nerd Font icons
+zstyle ':fzf-tab:complete:(cd|zd):*' fzf-preview 'eza -1 --color=always --icons=always --group-directories-first $realpath'
+
+# Live preview for files (bat) and directories (eza) across all completions
+zstyle ':fzf-tab:complete:*' fzf-preview 'if [[ -d $realpath ]]; then eza -1 --color=always --icons=always --group-directories-first $realpath; else bat --style=numbers --color=always --line-range :50 $realpath 2>/dev/null; fi'
 
 # Keybindings for zsh-history-substring-search
 zmodload -F zsh/terminfo +p:terminfo
