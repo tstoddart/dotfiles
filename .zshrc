@@ -194,6 +194,20 @@ alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 if (( $+commands[atuin] )); then
   eval "$(atuin init zsh)"
   (( $+functions[compdef] )) && eval "$(atuin gen-completions --shell zsh)"
+
+  # Ensure Ctrl-R triggers Atuin search (with zsh-vi-mode compatibility)
+  if (( $+functions[zvm_bindkey] )); then
+    _atuin_zvm_bind() {
+      zvm_bindkey viins '^r' atuin-search-viins
+      zvm_bindkey vicmd '^r' atuin-search
+      zvm_bindkey emacs '^r' atuin-search
+    }
+    zvm_after_init_commands+=(_atuin_zvm_bind)
+  else
+    bindkey -M emacs '^r' atuin-search
+    bindkey -M viins '^r' atuin-search-viins
+    bindkey -M vicmd '^r' atuin-search
+  fi
 fi
 
 # macOS specific integrations
