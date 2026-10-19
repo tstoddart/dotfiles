@@ -24,30 +24,6 @@ alias vim='nvim'
 
 [[ "$TERM" = "xterm-kitty" ]] && alias ssh="kitty +kitten ssh"
 
-# Atuin shell history sync
-if (( $+commands[atuin] )); then
-  eval "$(atuin init zsh)"
-fi
-
-# macOS specific integrations
-if [[ "$OSTYPE" == darwin* ]]; then
-  # SSH Certificate Agent (SSHCE / Secretive)
-  if [[ -S /Users/tom/Library/Containers/org.hejki.osx.sshce.agent/Data/socket.ssh ]]; then
-    export SSH_AUTH_SOCK=/Users/tom/Library/Containers/org.hejki.osx.sshce.agent/Data/socket.ssh
-  fi
-
-  alias ofzf='open "$(fzf)"'
-
-  # Bitwarden CLI helper
-  bwcopy() {
-    if (( $+commands[bw] )); then
-      local copy_cmd="pbcopy"
-      (( $+commands[pbcopy-secure] )) && copy_cmd="pbcopy-secure"
-      bw get item "$(bw list items | jq '.[] | "\(.name) | username: \(.login.username) | id: \(.id)" ' | fzf-tmux | awk '{print $(NF -0)}' | sed 's/\"//g')" | jq '.login.password' | sed 's/\"//g' | $copy_cmd
-    fi
-  }
-fi
-
 # Completion styling
 zmodload zsh/complist
 zstyle ':completion:*' menu select
@@ -144,24 +120,6 @@ fi
 
 autoload -Uz zcalc
 
-# Pipx completion
-if (( $+commands[register-python-argcomplete] && $+functions[compdef] )); then
-  eval "$(register-python-argcomplete pipx)"
-fi
-
-# FZF shell integrations (if installed)
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Antigravity config sync with homelab
-alias agy-push='rsync -avz --exclude=".migrated" ~/.gemini/config/ homelab:~/.gemini/config/'
-alias agy-pull='rsync -avz --exclude=".migrated" homelab:~/.gemini/config/ ~/.gemini/config/'
-
-# Dotfiles management (bare git repository with home worktree)
-alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-
-# zoxide shell integratoin
-eval "$(zoxide init zsh)"
-
 # ------------------------------------------------------------------------------
 # Machine-Local Overrides & Secrets (untracked by git)
 # ------------------------------------------------------------------------------
@@ -215,3 +173,45 @@ _zb_path_append "$ZEROBREW_PREFIX/sbin"
 _zb_path_append "$ZEROBREW_PREFIX/bin"
 
 # <<< zerobrew <<<
+
+# Pipx completion
+if (( $+commands[register-python-argcomplete] && $+functions[compdef] )); then
+  eval "$(register-python-argcomplete pipx)"
+fi
+
+# FZF shell integrations (if installed)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Antigravity config sync with homelab
+alias agy-push='rsync -avz --exclude=".migrated" ~/.gemini/config/ homelab:~/.gemini/config/'
+alias agy-pull='rsync -avz --exclude=".migrated" homelab:~/.gemini/config/ ~/.gemini/config/'
+
+# Dotfiles management (bare git repository with home worktree)
+alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+
+# zoxide shell integration
+eval "$(zoxide init zsh)"
+
+# Atuin shell history sync
+if (( $+commands[atuin] )); then
+  eval "$(atuin init zsh)"
+fi
+
+# macOS specific integrations
+if [[ "$OSTYPE" == darwin* ]]; then
+  # SSH Certificate Agent (SSHCE / Secretive)
+  if [[ -S /Users/tom/Library/Containers/org.hejki.osx.sshce.agent/Data/socket.ssh ]]; then
+    export SSH_AUTH_SOCK=/Users/tom/Library/Containers/org.hejki.osx.sshce.agent/Data/socket.ssh
+  fi
+
+  alias ofzf='open "$(fzf)"'
+
+  # Bitwarden CLI helper
+  bwcopy() {
+    if (( $+commands[bw] )); then
+      local copy_cmd="pbcopy"
+      (( $+commands[pbcopy-secure] )) && copy_cmd="pbcopy-secure"
+      bw get item "$(bw list items | jq '.[] | "\(.name) | username: \(.login.username) | id: \(.id)" ' | fzf-tmux | awk '{print $(NF -0)}' | sed 's/\"//g')" | jq '.login.password' | sed 's/\"//g' | $copy_cmd
+    fi
+  }
+fi
