@@ -190,9 +190,10 @@ alias agy-pull='rsync -avz --exclude=".migrated" homelab:~/.gemini/config/ ~/.ge
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
 
-# Atuin shell history sync
+# Atuin shell history sync & completions
 if (( $+commands[atuin] )); then
   eval "$(atuin init zsh)"
+  (( $+functions[compdef] )) && eval "$(atuin gen-completions --shell zsh)"
 fi
 
 # macOS specific integrations
