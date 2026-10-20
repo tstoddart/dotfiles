@@ -189,6 +189,10 @@ alias agy-pull='rsync -avz --exclude=".migrated" homelab:~/.gemini/config/ ~/.ge
 # Dotfiles management (bare git repository with home worktree)
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
+# Systemd user service management
+alias daemon-reload='systemctl --user daemon-reload'
+alias sc-reload='systemctl --user daemon-reload'
+
 
 # Atuin shell history sync & completions
 if (( $+commands[atuin] )); then
