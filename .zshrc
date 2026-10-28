@@ -196,7 +196,7 @@ alias sc-reload='systemctl --user daemon-reload'
 
 # Atuin shell history sync & completions
 if (( $+commands[atuin] )); then
-  eval "$(atuin init zsh)"
+  eval "$(atuin init zsh --disable-up-arrow)"
   (( $+functions[compdef] )) && eval "$(atuin gen-completions --shell zsh)"
 
   # Ensure Ctrl-R triggers Atuin search (with zsh-vi-mode compatibility)
